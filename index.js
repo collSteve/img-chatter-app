@@ -58,7 +58,7 @@ app.use(function (req, res, next) {
 server.listen(port, () => console.log(`listened at post: ${port}`)); 
 
 // host public
-app.use(express.static('public'));
+app.use(express.static('angular-public'));
 app.use("/pdata", express.static('data')); // server public data
 
 // database
