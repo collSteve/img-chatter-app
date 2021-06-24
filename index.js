@@ -5,9 +5,10 @@ const fs = require('fs');
 
 //const mongoose = require('mongoose');
 
+/*
 const db = require("./server-scripts/load-db");
 const Book = require('./server-scripts/db-models/book');
-const ChatMsg = require('./server-scripts/db-models/chat-msg');
+const ChatMsg = require('./server-scripts/db-models/chat-msg');*/
 
 const app = express(),
     port = 3080;
@@ -61,15 +62,17 @@ app.use(express.static('public'));
 app.use("/pdata", express.static('data')); // server public data
 
 // database
+/*
 const BookModel = Book('testData'); // save in collection 'testData'
 const ChatMsgModel = ChatMsg('chatMsg');
+*/
 //db_find({name:'Hello Mongo'});
 
 // BookModel.find({}, 'name', (err,data)=>{
 //     if (err) return console.log(err);
 //     console.log(data);
 // });
-
+/*
 
 function save_book1() {
     let book1 = new BookModel({name:"Hello Mongo5", price:2, qty:32});
@@ -85,6 +88,7 @@ async function db_find(options={}) {
     console.log(data);
 }
 
+
 app.get('/api', (req, res) =>{
     BookModel.find({}, (err, data)=>{
         if (err) return console.log(err);
@@ -93,6 +97,7 @@ app.get('/api', (req, res) =>{
         res.json(jsonData); // response with found data
     });
 });
+*/
 
 // param
 const userIDs= ['1','2','3','4','5'];
