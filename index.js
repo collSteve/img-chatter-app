@@ -175,7 +175,7 @@ app.get("/img/:dataImg", function (req,res){
         res.sendFile(path.join(__dirname, 'data', req.params.dataImg));
     }
     else {
-        res.status(403).send("Forbiden");
+        res.status(403).send("Access Forbiden");
     }
     
 });
