@@ -1,0 +1,36 @@
+<html>
+    <body>
+        <a href="/live-chat-page/live-chat.html">Live Chat</a>
+        <div id="hi"></div>
+
+        <script>
+            fetch('/api')
+            .then(res=>res.json())
+            .then(data=>{
+                displayItem(data);
+                console.log(data);
+            })
+            .catch(err=>console.log(err));
+
+            function displayItem(arr) {
+                let p = document.getElementById('hi');
+                arr.forEach(item => {
+                    for (const [key, value] of Object.entries(item)) {
+
+                        const newDiv = document.createElement("div");
+                        newDiv.innerText = `${key}: ${value}`;
+
+                        p.appendChild(newDiv);
+                    }
+                });
+            } 
+
+
+            function displayText(text) {
+                let p = document.getElementById('hi');
+
+                p.innerText = text;
+            }
+        </script>
+    </body>
+</html>
