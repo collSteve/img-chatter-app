@@ -11,7 +11,7 @@ const Book = require('./server-scripts/db-models/book');
 const ChatMsg = require('./server-scripts/db-models/chat-msg');*/
 
 const app = express(),
-    port = 3080;
+    port = process.env.PORT||3080;
 
 const server = http.createServer(app);
 const { Server } = require("socket.io");
