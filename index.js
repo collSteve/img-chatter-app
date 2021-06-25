@@ -3,6 +3,8 @@ const http = require('http');
 var path = require('path');
 const fs = require('fs');
 
+const NeDatastore = require('nedb'); // NeDB
+
 //const mongoose = require('mongoose');
 
 /*
@@ -185,4 +187,7 @@ let users = [];
 let allClients = [];
 let msgDataArray = [];
 
-io_function.start(io, users, allClients, msgDataArray, false);
+// load msg DataBase
+const msgDB = new Datastore('data/database/msgDB.db');
+
+io_function.start(io, users, allClients, msgDataArray, true,msgDB);

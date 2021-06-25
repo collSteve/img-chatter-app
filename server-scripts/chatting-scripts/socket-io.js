@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 
 const ChatMsg = require('../db-models/chat-msg');
 const ChatMsgModel = ChatMsg('chatMsg');
+
+// load data base
+
 /**
  * 
  * @param {*} io the Io server for socket 
@@ -12,7 +15,7 @@ const ChatMsgModel = ChatMsg('chatMsg');
  * @param {*} allClients Array containing all users' original socket info: socket{}
  * Ideally to be a global empty array, the function will act as mutator to change the array contents
  */
-function start_IO(io, users, allClients, msgDataArray, dbsave=false) {
+function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null) {
     io.on('connection', (socket)=>{
         allClients.push(socket);
         console.log('a user connected');
@@ -86,13 +89,23 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false) {
             msgDataArray.push(msgData);
 
             // save msg to database if available:
-            if (dbsave) {
+            if (dbsave && msgDB) {
+                /* 
+                // MongoDB
                 const chatMsg = new ChatMsgModel(msgData);
 
                 chatMsg.save((err, msg)=>{
                     if (err) return console.log(err);
                     console.log(msg.user+ ' msg' + " saved to collection");
                 });
+                */
+
+                // NeDB
+                msgDB.insert(msgData, function (err, newDoc) {   // Callback is optional
+                    // newDoc is the newly inserted document, including its _id
+                    if (err) {return console.log('save msg to NeDB failed.');}
+                    console.log("saved msg from "+newDoc.user);
+                  });
             }
     
             io.emit('chat message', msgDataArray); // emit 'chat message event' back to all clients side to act
