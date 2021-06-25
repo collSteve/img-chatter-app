@@ -110,7 +110,23 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null)
                     console.log("Saved msg from "+newDoc.user+" to NeDB");
                 });
             }
-    
+
+            let TrueMsgArray = null
+            if (msgDB!=null) {
+                // use NeDB
+                msgDB.find({}, (err, data)=>{
+                    if (err) {
+                        return console.log('[Error] Find reach MSg datas from NeDB');
+                    }
+                    console.log(data);
+                    TrueMsgArray = data;
+                });
+
+            }
+            else {
+                TrueMsgArray = msgDataArray;
+            }
+
             io.emit('chat message', msgDataArray); // emit 'chat message event' back to all clients side to act
         });
     });
