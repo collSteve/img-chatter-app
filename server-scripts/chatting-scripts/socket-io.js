@@ -5,7 +5,12 @@ const mongoose = require('mongoose');
 const ChatMsg = require('../db-models/chat-msg');
 const ChatMsgModel = ChatMsg('chatMsg');
 
-// load data base
+// NeDB
+function getAll(neDB) {
+    neDB.find({},(err, data)=>{
+        return data;
+    });
+}
 
 /**
  * 
@@ -21,7 +26,7 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null)
         console.log('a user connected');
     
         io.emit('new user', 'hi');
-        socket.on('new user', (userData)=>{
+        socket.on('new user', async function(userData){
             let nameAvailable = true;
             users.forEach(user => {
                 if (user.name == userData.name){
@@ -38,17 +43,34 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null)
                 console.log(`[${userData.name}] joined the room`);
                 io.emit('named user joined', userData);
 
+                let TrueMsgArray = null;
+                if (msgDB!=null) {
+                    // use NeDB
+                    // TrueMsgArray = await msgDB.find({}, (err, data)=>{
+                    //     if (err) {
+                    //         return console.log('[Error] Find reach MSg datas from NeDB');
+                    //     }
+                    //     console.log(data);
+                    // });
+                    TrueMsgArray =  await msgDB.find({}).sort({time: 1});
+
+                }
+                else {
+                    TrueMsgArray = msgDataArray;
+                }
+                console.log(TrueMsgArray);
+
                 const approve_msg = {
                     action: 'name change',
                     approved: true,
                     action_data: {
                         name:userData.name,
-                        msgDataArray: msgDataArray
+                        msgDataArray: TrueMsgArray
                     }
                 };
                 socket.emit('name_change_approved', approve_msg);
                 // only display chat after validating user name
-                io.emit('display-full-chat', msgDataArray);
+                io.emit('display-full-chat', TrueMsgArray); // !!need change
             }
             else {
     
@@ -76,7 +98,7 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null)
             }
         });
     
-        socket.on('chat message', (data) => {
+        socket.on('chat message', async function(data) {
             console.log(data.user+ ": " + data.msg);
 
             const msgData = {
@@ -111,23 +133,16 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null)
                 });
             }
 
-            let TrueMsgArray = null
+            let TrueMsgArray = null;
             if (msgDB!=null) {
                 // use NeDB
-                msgDB.find({}, (err, data)=>{
-                    if (err) {
-                        return console.log('[Error] Find reach MSg datas from NeDB');
-                    }
-                    console.log(data);
-                    TrueMsgArray = data;
-                });
-
+                TrueMsgArray =  await msgDB.find({}).sort({time: 1});
             }
             else {
                 TrueMsgArray = msgDataArray;
             }
 
-            io.emit('chat message', msgDataArray); // emit 'chat message event' back to all clients side to act
+            io.emit('chat message', TrueMsgArray); // emit 'chat message event' back to all clients side to act
         });
     });
 }
