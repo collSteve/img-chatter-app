@@ -182,6 +182,11 @@ app.get("/img/:dataImg", function (req,res){
     
 });
 
+// angular rout
+app.get('*',(req,res) =>{
+    res.sendFile(path.join(__dirname,'angular-public/index.html'));
+});
+
 // socket.io
 let users = [];
 let allClients = [];
