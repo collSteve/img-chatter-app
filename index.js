@@ -188,6 +188,7 @@ let allClients = [];
 let msgDataArray = [];
 
 // load msg DataBase
-const msgDB = new Datastore('data/database/msgDB.db');
+const msgDB = new NeDatastore('data/database/msgDB.db');
+msgDB.loadDatabase();
 
-io_function.start(io, users, allClients, msgDataArray, true,msgDB);
+io_function.start(io, users, allClients, msgDataArray, true, msgDB);

@@ -89,7 +89,7 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null)
             msgDataArray.push(msgData);
 
             // save msg to database if available:
-            if (dbsave && msgDB) {
+            if (dbsave && msgDB!=null) {
                 /* 
                 // MongoDB
                 const chatMsg = new ChatMsgModel(msgData);
@@ -103,9 +103,12 @@ function start_IO(io, users, allClients, msgDataArray, dbsave=false, msgDB=null)
                 // NeDB
                 msgDB.insert(msgData, function (err, newDoc) {   // Callback is optional
                     // newDoc is the newly inserted document, including its _id
-                    if (err) {return console.log('save msg to NeDB failed.');}
-                    console.log("saved msg from "+newDoc.user);
-                  });
+                    if (err) {
+                        console.log(err);
+                        return console.log('save msg to NeDB failed.');
+                    }
+                    console.log("Saved msg from "+newDoc.user+" to NeDB");
+                });
             }
     
             io.emit('chat message', msgDataArray); // emit 'chat message event' back to all clients side to act
